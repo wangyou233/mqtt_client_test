@@ -27,7 +27,7 @@ public class MqttTools
         }
         else
         {
-            Thread.Sleep(testConfig.ReconnectDelay * 1000);
+            await Task.Delay(testConfig.ReconnectDelay * 1000);
             await mqttClient.ReconnectAsync();
         }
         mqttClient.ConnectedAsync += MqttClientOnConnectedAsync;
@@ -47,14 +47,14 @@ public class MqttTools
             {
                 await mqttClient.PublishAsync(message);
                 Total.AddTotalSend();
-                Thread.Sleep(testConfig.SendMessageDelay*1000);
+                await Task.Delay(testConfig.SendMessageDelay * 1000);
             }
 
         }
         catch (Exception e)
         {
+            Log.Error($"{clientId}{e.Message}");
             Console.WriteLine(e);
-            throw;
         }
     }
 

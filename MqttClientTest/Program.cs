@@ -32,14 +32,14 @@ Log.Information("Ah, there you are!");
 Log.Information("开始....");
 for (int i = 0; i < testConfig.Thread * testConfig.ConnPerThread; i++)
 {
-    Thread thread = new Thread(()=>MqttTools.Test(testConfig, i.ToString()));
+    Thread thread = new(()=>MqttTools.Test(testConfig, i.ToString()));
     thread.Start();
 }
 
 while (true)
 {
     Log.Information($"当前订阅总数:{Total.TOTAL_SUB}, 已接收消息:{Total.TOTAL_MSG}, 已发送消息:{Total.TOTAL_SEND}");
-    Thread.Sleep(2000);
+    await Task.Delay(2000);
     if (Total.TOTAL_SUB < testConfig.Thread * testConfig.ConnPerThread)
     {
         var xian = testConfig.Thread * testConfig.ConnPerThread - Total.TOTAL_SUB;
@@ -51,7 +51,8 @@ while (true)
             
             Log.Information(i.ToString());
         }
-        Thread.Sleep(5000);
+
+        await Task.Delay(5000);
 
     }
 }
